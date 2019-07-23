@@ -10,10 +10,14 @@ namespace NvAPIWrapper.Native.GPU.Structures
     [StructureVersion(1)]
     public struct PrivateFanCoolersInfoV1 : IInitializable
     {
-        internal const int MaxNumberOfFanCoolerInfoEntries = 3;
+        internal const int MaxNumberOfFanCoolerInfoEntries = 32;
 
         internal StructureVersion _Version;
+        internal readonly uint _UnknownUInt1;
         internal readonly uint _FanCoolersInfoCount;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U4)]
+        internal readonly uint[] _Reserved;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxNumberOfFanCoolerInfoEntries)]
         internal readonly FanCoolersInfoEntry[] _FanCoolersInfoEntries;
@@ -26,12 +30,22 @@ namespace NvAPIWrapper.Native.GPU.Structures
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public struct FanCoolersInfoEntry
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 131, ArraySubType = UnmanagedType.U4)]
-            internal readonly uint[] _Unknown;
+            internal readonly uint _CoolerId;
+            internal readonly uint _UnknownUInt3;
+            internal readonly uint _UnknownUInt4;
+            internal readonly uint _MaximumRPM;
 
-            public uint[] RawData
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U4)]
+            internal readonly uint[] _Reserved;
+
+            public uint CoolerId
             {
-                get => _Unknown;
+                get => _CoolerId;
+            }
+
+            public uint MaximumRPM
+            {
+                get => _MaximumRPM;
             }
         }
     }

@@ -10,15 +10,16 @@ namespace NvAPIWrapper.Native.GPU.Structures
     [StructureVersion(1)]
     public struct PrivateFanCoolersControlV1 : IInitializable
     {
-        internal const int MaxNumberOfFanCoolerControlEntries = 3;
-
+        internal const int MaxNumberOfFanCoolerControlEntries = 32;
         internal StructureVersion _Version;
+        internal readonly uint _UnknownUInt;
         internal readonly uint _FanCoolersControlCount;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U4)]
+        internal readonly uint[] _Reserved;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxNumberOfFanCoolerControlEntries)]
         internal readonly FanCoolersControlEntry[] _FanCoolersControlEntries;
-
-        internal readonly uint _Unknown;
 
         public FanCoolersControlEntry[] FanCoolersControlEntries
         {
@@ -28,12 +29,29 @@ namespace NvAPIWrapper.Native.GPU.Structures
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public struct FanCoolersControlEntry
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 120, ArraySubType = UnmanagedType.U4)]
-            internal readonly uint[] _Unknown;
+            internal uint _CoolerId;
+            internal uint _Level;
+            internal FanCoolersControlMode _ControlMode;
 
-            public uint[] RawData
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8, ArraySubType = UnmanagedType.U4)]
+            internal readonly uint[] _Reserved;
+
+            public uint CoolerId
             {
-                get => _Unknown;
+                get => _CoolerId;
+                internal set => _CoolerId = value;
+            }
+
+            public uint Level
+            {
+                get => _Level;
+                internal set => _Level = value;
+            }
+
+            public FanCoolersControlMode ControlMode
+            {
+                get => _ControlMode;
+                internal set => _ControlMode = value;
             }
         }
     }
